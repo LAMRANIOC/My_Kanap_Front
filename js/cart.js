@@ -1,7 +1,9 @@
 (async function () {
-  Panier = JSON.parse(localStorage.getItem("panier"));
-  panierCommande();
-  validFormAndEnvoi();
+  if(localStorage.getItem("panier") != null) {
+    Panier = JSON.parse(localStorage.getItem("panier"));
+    panierCommande();
+    validFormAndEnvoi();
+  }
 })();
 
 function panierCommande() {
@@ -107,87 +109,101 @@ function totalCmd() {
   console.log("prix tot:  " + prix);
   document.getElementById("totalPrice").innerHTML = prix;
 }
-// }
 
 //CONTACT FORMULAIRE
-// Vérification des input et récupération N° commande du back-end
-
-//définition des règles de validation
-const regexEmail = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
-const regexAddress = /^[a-zA-Z0-9\s,.'-]{3,}$/;
-const regexLetter = /^[a-zA-Z-]+$/;
-
-document.querySelector("#firstName").addEventListener('change', function(e) {
-  if (!document.querySelector("#firstName").value.match(regexLetter)) {
-    document.getElementById("firstNameErrorMsg").innerText =
-      "Saisie incorrecte";
-    e.preventDefault();
-  }
-})
-
-document.querySelector("#lastName").addEventListener('change', function(e) {
-  if (!document.querySelector("#lastName").value.match(regexLetter)) {
-    document.getElementById("lastNameErrorMsg").innerText =
-      "Saisie incorrecte";
-    e.preventDefault();
-  }
-})
-
-document.querySelector("#city").addEventListener('change', function(e) {
-  if (!document.querySelector("#city").value.match(regexLetter)) {
-    document.getElementById("cityErrorMsg").innerText =
-      "Saisie incorrecte";
-    e.preventDefault();
-  }
-})
-
-document.querySelector("#address").addEventListener('change', function(e) {
-  if (!document.querySelector("#address").value.match(regexLetter)) {
-    document.getElementById("addressErrorMsg").innerText =
-      "Saisie incorrecte";
-    e.preventDefault();
-  }
-})
-
-document.querySelector("#email").addEventListener('change', function(e) {
-  if (!document.querySelector("#email").value.match(regexLetter)) {
-    document.getElementById("emailErrorMsg").innerText =
-      "Saisie incorrecte";
-    e.preventDefault();
-  }
-})
-
-
+// Vérification des input
 function validFormAndEnvoi() {
+/*OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
+//-------------------------------------  VAlIDATION DU FORMULAIRE AVANT ENVOIE  -----------------------------------------
+// Vérification du prenom
+const prenom = document.getElementById("firstName");
+prenom.addEventListener("change", function (event) {
+  if (checkInput(prenom.value, "text")) {
+  } else {
+    document.getElementById("firstNameErrorMsg").innerText =
+      "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
+    //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
+    event.preventDefault();
+  }
+});
+
+// Vérification du nom
+const nom = document.getElementById("lastName");
+nom.addEventListener("change", function (event) {
+  if (checkInput(nom.value, "text")) {
+  } else {
+      document.getElementById("lastNameErrorMsg").innerText =
+      "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
+    //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
+        event.preventDefault();
+  }
+});
+// Vérification de la validité de l'adresse
+const adresse = document.getElementById("address");
+adresse.addEventListener("change", function (event) {
+  if (checkInput(adresse.value, "city")) {
+  } else {
+    document.getElementById("addressErrorMsg").innerText =
+    "Saisie incorrecte de l'addresse";
+  //alert("Saisie incorrecte ");
+      event.preventDefault();
+}
+});// Vérification de la validité de la ville
+const ville = document.getElementById("city");
+ville.addEventListener("change", function (event) {
+  if (checkInput(ville.value, "text")) {
+  } else {
+    document.getElementById("cityErrorMsg").innerText =
+    "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
+  //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
+      event.preventDefault();
+}
+});
+// Vérification de la validité du mail
+const mail = document.getElementById("email");
+mail.addEventListener("change", function (event) {
+  if (checkInput(mail.value, "email")) {
+  } else {
+    document.getElementById("emailErrorMsg").innerText =
+    "Saisie incorrecte du mail!";
+  //alert("Saisie incorrecte du mail!");
+      event.preventDefault();
+}
+});
+
+//On creer la fonction de verification du formulaire avec en parametre la valeur et le type
+function checkInput(val, type) {
+  let Regex;
+  switch (type) {
+    case "text":
+      Regex = /^[A-Z-a-z\s]{3,40}$/;
+      break;
+    case "city":
+      Regex = /^[0-9\s]{1,3}[-a-zA-Zàâäéèêëïîôöùûüç]/;
+      break;
+    case "email":
+      Regex = /^[a-zA-Z0-9.]{4,}@[a-zA-Z0-9-]{3,}\.[a-zA-Z0-9-]{2,}$/;
+      break;
+    default:
+      Regex = /^[a-zA-Z0-9_ ]{2,}$/;
+      break;
+  }
+  return val.match(Regex);
+
+/*OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
+
   const commander = document.getElementById("order");
-  
+
+//desactivation du bouton commander
+
+//commander.disabled = true;
+
+
   // Lors d'un clic, si l'un des champs n'est pas rempli, on affiche une erreur,
-  // On vérifie que le numéro est un nombre, sinon on empeche l'envoi du formulaire.
   console.log("nad 1");
   commander.addEventListener("click", (e) => {
+    e.preventDefault();
     console.log("debut on click");
-    // On vient comparer la valeur de l'input avec le regex Letter
-  /*if (!document.querySelector("#firstName").value.match(regexLetter)) {
-    document.getElementById("firstNameErrorMsg").innerText =
-        "Saisie incorrecte";
-      e.preventDefault();
-    } else if (!document.querySelector("#lastName").value.match(regexLetter)) {
-      document.getElementById("lastNameErrorMsg").innerText =
-        "Saisie incorrecte";
-      e.preventDefault();
-    } else if (!document.querySelector("#city").value.match(regexLetter)) {
-      document.getElementById("cityErrorMsg").innerText = "Saisie incorrecte";
-      e.preventDefault();
-    } else if (!document.querySelector("#address").value.match(regexAddress)) {
-      document.getElementById("addressErrorMsg").innerText =
-        "Saisie incorrecte";
-      e.preventDefault();
-    } else if (!document.querySelector("#email").value.match(regexEmail)) {
-      document.getElementById("emailErrorMsg").innerText = "Saisie incorrecte";
-      console.log("nad 3");
-      e.preventDefault();
-    } else {
-      console.log("nad else" + Panier);*/
       // Si il n'y a pas de values dans le localStorage on affiche une erreur
       if (Panier !== null) {
         var product = [];
@@ -204,10 +220,11 @@ function validFormAndEnvoi() {
           email: document.querySelector("#email").value,
         };
         console.log("ordre a passer : " + user);
-        localStorage.setItem("user", user);
-        //document.location = "./confirmation.html";
+        localStorage.setItem("user", JSON.stringify(user));
         window.location.assign("./confirmation.html")
       }
-   // }
+//    }
   });
+}
+
 }

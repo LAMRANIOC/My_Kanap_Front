@@ -10,6 +10,7 @@ let Produit_ID = function () {
 
   fetch(objectURL)
     .then((response) => response.json())
+    .catch((error) => alert("Une erreur est survenue avec L'API"))
     .then((data) => {
       Objproduit=data;
       console.log("data dans fonction produit" + data);

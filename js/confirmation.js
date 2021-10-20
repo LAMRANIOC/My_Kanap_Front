@@ -4,25 +4,7 @@
  Getcommand();
 })();
 
-//Calcul du prix total panier
-function totalCmd() {
-  //creation d'un tableau qui contiendra chaque prix du panier
-  let prix=0;    
-  //On boucle sur tout les prix trouver dans le panier
-  //console.log("lg panier:  " + Panier.length)
- // if (Panier.length !== null) {
-  
-    for (i = 0; i < Panier.length; i++) {
-      prix += parseInt(Panier[i].prix) * parseInt(Panier[i].quantite);
-    }
-    console.log("prix tot:  " + prix)
-    document.getElementById("totalPrice").innerHTML=prix;
-  }
-// }
-
-
-//CONTACT FORMULAIRE
-// Vérification des input et récupération N° commande du back-end
+// récupération N° commande du back-end
 function Getcommand() {
     console.log("fonction deb" + Panier + " user "+ user)
       // Si il n'y a pas de values dans le localStorage on affiche une erreur
@@ -55,12 +37,12 @@ function Getcommand() {
          // Envoie de la requête
          fetch('http://localhost:3000/api/products/order', options)
          .then(res => res.json())
+         .catch((error) => alert("Une erreur est survenue avec L'API"))
          .then((data) => {
-          console.log(data)  
+          console.log(data) 
+          document.getElementById('orderId').innerHTML = data.orderId; 
           localStorage.clear();
-           // localStorage.setItem('orderId', data.orderId);
-           // document.location = 'confirmation.html';
-         })
+                    })
          .catch(function(error) {
             console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
          });
