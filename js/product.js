@@ -47,20 +47,12 @@ Produit_ID();
   event.preventDefault()
 //Création du panier
   Panier = JSON.parse(localStorage.getItem("panier"));
-  //console.log("click " + id + " " + price.value + "  " +colors.value + " " + img.value + " " + title.value + " " + price.value )
-  console.log(id)
-  console.log(colors.value)
-  console.log(quantity.value)
-  console.log(price.value +  "  " + price)
   if(quantity.value > 0 && colors.value !==""){
     AjoutDsPanier();
   } else {
     alert('Attention quantité ou couleur non saisie !');
  }
   }
-  
-  //AjoutDsPanier(id,colors.value,quantity.value,`${data.imageUrl}`,`${data.name}`,`${data.price}`);
-  //}
 
 //Ajoute un article au panier
 function AjoutDsPanier() {
@@ -84,7 +76,7 @@ console.log(product)
       if (Panier) {
       const Recherche = Panier.find((el) => el.id === product.id && el.couleur === product.couleur);
       console.log("   recherche " + Recherche)
-      //Si le produit existe => mise à jour de la quantité et total
+      //Si le produit existe => mise à jour de la quantité
       if (Recherche) {
         let newQty = parseInt(product.quantite) + parseInt(Recherche.quantite);
         Recherche.quantite = newQty;
@@ -93,14 +85,12 @@ console.log(product)
         alert("Votre article vient d'être ajouté au panier");}
       //Sinon on ajoute le produit
        else {
-        //total = parseInt(qty) * price;
         Panier.push(product);
         localStorage.setItem("panier", JSON.stringify(Panier));
         alert("Votre article vient d'être ajouté au panier");}
       //Si le panier n'existe pas on le créer puis on ajoute le nouveau produit
         } else {
       Panier = [];
-      //total = parseInt(qty) * price;
       Panier.push(product);
       localStorage.setItem("panier", JSON.stringify(Panier));
       alert("Votre article vient d'être ajouté au panier");

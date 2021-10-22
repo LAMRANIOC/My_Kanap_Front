@@ -1,8 +1,9 @@
+const commander = document.getElementById("order");
 (async function () {
   if(localStorage.getItem("panier") != null) {
     Panier = JSON.parse(localStorage.getItem("panier"));
     panierCommande();
-    validFormAndEnvoi();
+    validFormulaire();
   }
 })();
 
@@ -39,13 +40,9 @@ function panierCommande() {
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
                       <p>Qté : </p>
-                      <input type="number" oninput="updateQuantity('${
-                        produit.id
-                      }','${
-        produit.couleur
-      }')" id="quantite" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${
-        produit.quantite
-      }>
+                      <input type="number" oninput="updateQuantity('${produit.id}','${produit.couleur}')"
+                       onkeyup="updateQuantity('${produit.id}','${produit.couleur}')"
+       id="quantite" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${produit.quantite}>
                     </div>
                     <div onclick="supprElm('${produit.id}','${
         produit.couleur
@@ -64,9 +61,6 @@ function updateQuantity(id, couleur) {
   if (quant > 100) {
     document.getElementById(id).querySelector("#quantite").value = 100;
   }
-  console.log(id);
-  console.log(couleur);
-  console.log(document.getElementById(id).querySelector("#quantite").value);
   const Recherche = Panier.findIndex(
     (el) => el.id === id && el.couleur === couleur
   );
@@ -85,7 +79,6 @@ function updateQuantity(id, couleur) {
 function supprElm(id, couleur) {
   console.log(id);
   console.log(couleur);
-  //console.log(document.getElementById(id).querySelector("#quantite").value);
   const Recherche = Panier.findIndex(
     (el) => el.id === id && el.couleur === couleur
   );
@@ -100,8 +93,6 @@ function totalCmd() {
   //creation d'un tableau qui contiendra chaque prix du panier
   let prix = 0;
   //On boucle sur tout les prix trouver dans le panier
-  //console.log("lg panier:  " + Panier.length)
-  // if (Panier.length !== null) {
 
   for (i = 0; i < Panier.length; i++) {
     prix += parseInt(Panier[i].prix) * parseInt(Panier[i].quantite);
@@ -110,66 +101,77 @@ function totalCmd() {
   document.getElementById("totalPrice").innerHTML = prix;
 }
 
-//CONTACT FORMULAIRE
-// Vérification des input
-function validFormAndEnvoi() {
-/*OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
+function validFormulaire() {
 //-------------------------------------  VAlIDATION DU FORMULAIRE AVANT ENVOIE  -----------------------------------------
 // Vérification du prenom
 const prenom = document.getElementById("firstName");
-prenom.addEventListener("change", function (event) {
-  if (checkInput(prenom.value, "text")) {
+prenom.addEventListener("keyup", function (event) {
+  if (validprenom=checkInput(prenom.value, "text")) {
+    document.getElementById("firstNameErrorMsg").innerText="";
   } else {
     document.getElementById("firstNameErrorMsg").innerText =
       "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
-    //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
-    event.preventDefault();
+      event.preventDefault();
   }
 });
 
 // Vérification du nom
 const nom = document.getElementById("lastName");
-nom.addEventListener("change", function (event) {
-  if (checkInput(nom.value, "text")) {
-  } else {
+nom.addEventListener("keyup", function (event) {
+  if (validnom=checkInput(nom.value, "text")) {
+    document.getElementById("lastNameErrorMsg").innerText = ""
+    event.preventDefault();;
+
+    } else {
       document.getElementById("lastNameErrorMsg").innerText =
       "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
-    //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
         event.preventDefault();
   }
 });
 // Vérification de la validité de l'adresse
 const adresse = document.getElementById("address");
-adresse.addEventListener("change", function (event) {
-  if (checkInput(adresse.value, "city")) {
+adresse.addEventListener("keyup", function (event) {
+  if (validadresse=checkInput(adresse.value, "city")) {
+    document.getElementById("addressErrorMsg").innerText = "";
   } else {
     document.getElementById("addressErrorMsg").innerText =
     "Saisie incorrecte de l'addresse";
-  //alert("Saisie incorrecte ");
       event.preventDefault();
 }
 });// Vérification de la validité de la ville
 const ville = document.getElementById("city");
-ville.addEventListener("change", function (event) {
-  if (checkInput(ville.value, "text")) {
+ville.addEventListener("keyup", function (event) {
+  if (validville=checkInput(ville.value, "text")) {
+    document.getElementById("cityErrorMsg").innerText = "";
   } else {
     document.getElementById("cityErrorMsg").innerText =
     "Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum";
-  //alert("Saisie incorrecte :Ne pas mettre de nombres,symboles et avoir 3 caractères minimum");
       event.preventDefault();
 }
 });
 // Vérification de la validité du mail
 const mail = document.getElementById("email");
-mail.addEventListener("change", function (event) {
-  if (checkInput(mail.value, "email")) {
+mail.addEventListener("keyup", function (event) {
+  if (validmail=checkInput(mail.value, "email")) {
+    document.getElementById("emailErrorMsg").innerText = "";
   } else {
     document.getElementById("emailErrorMsg").innerText =
     "Saisie incorrecte du mail!";
-  //alert("Saisie incorrecte du mail!");
       event.preventDefault();
 }
+/*
+if(validprenom  && validprenom !="" &&
+ validnom  && validnom != null &&
+ validadresse && validadresse !="" &&
+ validville && validville !="" &&
+ validmail && validmail !="")
+    {
+     // commander.disabled=false 
+  }else{
+   // commander.disabled=true
+  }*/
 });
+}
 
 //On creer la fonction de verification du formulaire avec en parametre la valeur et le type
 function checkInput(val, type) {
@@ -189,29 +191,22 @@ function checkInput(val, type) {
       break;
   }
   return val.match(Regex);
-
-/*OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO*/
-
-  const commander = document.getElementById("order");
-
-//desactivation du bouton commander
-
-//commander.disabled = true;
-
-
+}
   // Lors d'un clic, si l'un des champs n'est pas rempli, on affiche une erreur,
-  console.log("nad 1");
   commander.addEventListener("click", (e) => {
+    if(validprenom  && validprenom !="" &&
+      validnom  && validnom != null &&
+      validadresse && validadresse !="" &&
+      validville && validville !="" &&
+      validmail && validmail !=""){
+    
     e.preventDefault();
-    console.log("debut on click");
       // Si il n'y a pas de values dans le localStorage on affiche une erreur
       if (Panier !== null) {
         var product = [];
         for (i = 0; i < Panier.length; i++) {
           product[i] = Panier[i].id;
-          console.log(product[i]);
         }
-        console.log("nad apres" + product);
         const user = {
           firstName: document.querySelector("#firstName").value,
           lastName: document.querySelector("#lastName").value,
@@ -222,9 +217,8 @@ function checkInput(val, type) {
         console.log("ordre a passer : " + user);
         localStorage.setItem("user", JSON.stringify(user));
         window.location.assign("./confirmation.html")
-      }
-//    }
+      } else {
+        alert('Commande impossible le panier est vide !');
+  }
+}
   });
-}
-
-}

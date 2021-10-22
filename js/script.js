@@ -2,7 +2,7 @@
 var Produits = function () {
     fetch("http://localhost:3000/api/products")
       .then((response) => response.json())
-      .catch((error) => alert("Une erreur est survenue avec L'API"))
+      .catch((error) => alert("Une erreur est survenue avec L'API. Veuillez voir l'acces au server!"))
       .then((data) => {
         console.log(data);
   
